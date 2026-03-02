@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Will you marry me?</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ========== CSS ========== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Quicksand', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
+      transition: background 1.2s ease;
+      padding: 1rem;
+      opacity: 0;
+      animation: fadeIn 0.8s ease forwards;
+    }
+
+    body.celebrating {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .proposal-container {
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .proposal-container h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 700;
+      color: #5c3d4a;
+      margin-bottom: 2rem;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .buttons-wrap {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      min-height: 120px;
+    }
+
+    .btn {
+      font-family: 'Quicksand', sans-serif;
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      font-weight: 600;
+      padding: 0.9rem 1.8rem;
+      border: none;
+      border-radius: 2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    }
+
+    .btn-yes {
+      position: relative;
+      background: linear-gradient(135deg, #e84393, #fd79a8);
+      color: white;
+      z-index: 2;
+      animation: pulse 1.5s ease-in-out infinite;
+    }
+
+    .btn-yes:hover {
+      animation: none;
+      transform: translateY(-3px) scale(1.05);
+    }
+
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 4px 15px rgba(232, 67, 147, 0.5); }
+      50% { box-shadow: 0 4px 25px rgba(232, 67, 147, 0.8); }
+    }
+
+    .btn-no {
+      position: fixed;
+      background: linear-gradient(135deg, #a8a8a8, #d4d4d4);
+      color: #5c3d4a;
+      transition: left 0.35s ease, top 0.35s ease;
+      z-index: 1;
+    }
+
+    /* Celebration screen */
+    .celebration {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      animation: fadeIn 0.6s ease;
+    }
+
+    .celebration.visible {
+      display: flex;
+    }
+
+    .celebration h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 7vw, 4rem);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 20px rgba(0,0,0,0.2);
+      animation: scaleIn 0.6s ease 0.2s both;
+    }
+
+    .celebration p {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      color: rgba(255,255,255,0.95);
+      animation: scaleIn 0.6s ease 0.4s both;
+    }
+
+    @keyframes scaleIn {
+      from {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+
+    #hearts-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 10;
+      overflow: hidden;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 1.5rem;
+      animation: floatUp 4s ease-in forwards;
+      opacity: 0.9;
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(100vh) rotate(0deg);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(-100px) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- ========== HTML ========== -->
+  <div class="proposal-container" id="proposalScreen">
+    <h1>Will you marry me?</h1>
+    <div class="buttons-wrap" id="buttonsWrap">
+      <button type="button" class="btn btn-yes" id="btnYes">Yes 💖</button>
+      <button type="button" class="btn btn-no" id="btnNo">No 🙈</button>
+    </div>
+  </div>
+
+  <div class="celebration" id="celebrationScreen">
+    <h2>Congratulations!!! 🎉💍</h2>
+    <p>You just made the best decision ever!</p>
+  </div>
+
+  <div id="hearts-container"></div>
+
+  <script>
+    /* ========== JavaScript ========== */
+
+    // Optional sound (uncomment and add audio file to enable)
+    // const successSound = new Audio('success.mp3');
+
+    const btnYes = document.getElementById('btnYes');
+    const btnNo = document.getElementById('btnNo');
+    const buttonsWrap = document.getElementById('buttonsWrap');
+    const proposalScreen = document.getElementById('proposalScreen');
+    const celebrationScreen = document.getElementById('celebrationScreen');
+    const heartsContainer = document.getElementById('hearts-container');
+
+    const PADDING = 16;
+    const HEARTS = ['💖', '💕', '💗', '❤️', '💓', '🌸', '✨'];
+
+    // Initial No button position (viewport-centered, slightly offset)
+    function setInitialNoPosition() {
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const noRect = btnNo.getBoundingClientRect();
+      btnNo.style.left = (w / 2 - noRect.width / 2 + 100) + 'px';
+      btnNo.style.top = (h / 2 - noRect.height / 2 + 40) + 'px';
+    }
+    setInitialNoPosition();
+    window.addEventListener('resize', setInitialNoPosition);
+
+    // Get random position within viewport bounds; never overlap Yes (using getBoundingClientRect)
+    function getRandomPosition() {
+      const yesRect = btnYes.getBoundingClientRect();
+      const noRect = btnNo.getBoundingClientRect();
+      const noWidth = noRect.width;
+      const noHeight = noRect.height;
+      const maxX = window.innerWidth - noWidth - PADDING;
+      const maxY = window.innerHeight - noHeight - PADDING;
+      let x, y;
+      let attempts = 0;
+      const maxAttempts = 80;
+
+      do {
+        x = PADDING + Math.random() * Math.max(0, maxX - PADDING);
+        y = PADDING + Math.random() * Math.max(0, maxY - PADDING);
+        attempts++;
+      } while (overlapsYes(x, y, noWidth, noHeight, yesRect) && attempts < maxAttempts);
+
+      return { x, y };
+    }
+
+    function overlapsYes(noX, noY, noW, noH, yesRect) {
+      const noRight = noX + noW;
+      const noBottom = noY + noH;
+      return !(noRight < yesRect.left || noX > yesRect.right || noBottom < yesRect.top || noY > yesRect.bottom);
+    }
+
+    function moveNoButton() {
+      const pos = getRandomPosition();
+      btnNo.style.left = pos.x + 'px';
+      btnNo.style.top = pos.y + 'px';
+    }
+
+    // Desktop: move on mouseenter
+    btnNo.addEventListener('mouseenter', moveNoButton);
+
+    // Mobile: move on touchstart (touch devices)
+    let touchMoved = false;
+    btnNo.addEventListener('touchstart', (e) => {
+      touchMoved = false;
+      moveNoButton();
+    }, { passive: true });
+    btnNo.addEventListener('touchmove', () => { touchMoved = true; });
+    btnNo.addEventListener('touchend', (e) => {
+      if (!touchMoved) e.preventDefault();
+    });
+
+    // Yes button: show celebration
+    btnYes.addEventListener('click', () => {
+      proposalScreen.style.display = 'none';
+      celebrationScreen.classList.add('visible');
+      document.body.classList.add('celebrating');
+
+      // successSound?.play().catch(() => {});
+
+      startHearts();
+    });
+
+    function startHearts() {
+      const interval = setInterval(() => {
+        createHeart();
+      }, 200);
+      setTimeout(() => clearInterval(interval), 5000);
+    }
+
+    function createHeart() {
+      const el = document.createElement('span');
+      el.className = 'heart';
+      el.textContent = HEARTS[Math.floor(Math.random() * HEARTS.length)];
+      el.style.left = Math.random() * 100 + 'vw';
+      el.style.animationDuration = (3 + Math.random() * 2) + 's';
+      heartsContainer.appendChild(el);
+      setTimeout(() => el.remove(), 5000);
+    }
+  </script>
+</body>
+</html>
